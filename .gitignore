@@ -1,0 +1,22 @@
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore PowerShell/Editor history
+*.pshistory
+*.ps1xml
+.vscode/
+
+# Ignore log/output files
+logs/
+*.log
+
+# Ignore local configs (API keys, private settings)
+config/*.json
+config/*.txt
+
+# Ignore compiled artifacts (if any)
+*.exe
+*.dll
+*.pdb
