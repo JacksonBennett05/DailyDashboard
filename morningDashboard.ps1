@@ -104,8 +104,8 @@ function Get-ESPNTeamPrevNext {
 $ars = Get-ESPNTeamPrevNext -Sport "soccer" -League "eng.1" -TeamKey "Arsenal"
 
 Write-Output "=== Arsenal ==="
-if ($ars.Previous) { Write-Output ("Previous: " + $ars.Previous.DateTime.ToString("ddd MMM d h:mm tt") + " — " + $ars.Previous.Summary) } else { Write-Output "Previous: (none found)" }
-if ($ars.Next)     { Write-Output ("Next:     " + $ars.Next.DateTime.ToString("ddd MMM d h:mm tt") + " — " + $ars.Next.Summary) }     else { Write-Output "Next: (none found)" }
+if ($ars.Previous) { Write-Output ("Previous: " + $ars.Previous.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $ars.Previous.Summary) } else { Write-Output "Previous: (none found)" }
+if ($ars.Next)     { Write-Output ("Next:     " + $ars.Next.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $ars.Next.Summary) }     else { Write-Output "Next: (none found)" }
 
 Write-Output ""
 
@@ -113,7 +113,7 @@ Write-Output ""
 $bos = Get-ESPNTeamPrevNext -Sport "basketball" -League "nba" -TeamKey "BOS"
 
 Write-Output "=== Boston Celtics ==="
-if ($bos.Previous) { Write-Output ("Previous: " + $bos.Previous.DateTime.ToString("ddd MMM d h:mm tt") + " — " + $bos.Previous.Summary) } else { Write-Output "Previous: (none found)" }
-if ($bos.Next)     { Write-Output ("Next:     " + $bos.Next.DateTime.ToString("ddd MMM d h:mm tt") + " — " + $bos.Next.Summary) }     else { Write-Output "Next: (none found)" }
+if ($bos.Previous) { Write-Output ("Previous: " + $bos.Previous.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $bos.Previous.Summary) } else { Write-Output "Previous: (none found)" }
+if ($bos.Next)     { Write-Output ("Next:     " + $bos.Next.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $bos.Next.Summary) }     else { Write-Output "Next: (none found)" }
 
 Write-Host "-----------------------------------"
