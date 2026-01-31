@@ -9,6 +9,8 @@ $weather = Invoke-WebRequest "https://wttr.in/$areaCode$fmt"
 $response = Invoke-RestMethod "https://api.sunrise-sunset.org/json?lat=$lat&lng=$lng&tzid=America/New_York"
 $sunrise = $response.results.sunrise
 $sunset  = $response.results.sunset
+$eventData = Import-Csv -Path ".\events.csv"
+
 
 
 Write-Host " "
@@ -115,5 +117,49 @@ $bos = Get-ESPNTeamPrevNext -Sport "basketball" -League "nba" -TeamKey "BOS"
 Write-Output "=== Boston Celtics ==="
 if ($bos.Previous) { Write-Output ("Previous: " + $bos.Previous.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $bos.Previous.Summary) } else { Write-Output "Previous: (none found)" }
 if ($bos.Next)     { Write-Output ("Next:     " + $bos.Next.DateTime.ToString("ddd MMM d h:mm tt") + " - " + $bos.Next.Summary) }     else { Write-Output "Next: (none found)" }
+
+Write-Output " "
+Write-Output "=== Events ==="
+# --- Events ---
+$eventDataWithParsed = foreach ($event in $eventData) {
+  $parsed = $null
+  try{
+    $parsed = [DateTime]::ParseExact(
+      $event.DateTime,
+      "yyyy-MM-dd HH:mm",
+      $null
+    )
+  } catch {
+    $parsed = $null
+  }
+  [PSCustomObject]@{
+    Name = $event.Name
+    DateTime = $event.DateTime
+    Type = $event.Type
+    Notes = $event.Notes
+    ParsedDateTime = $parsed
+  }
+}
+
+$now = Get-Date
+$upcomingEvents = $eventDataWithParsed | Where-Object { $_.ParsedDateTime -ne $null -and $_.ParsedDateTime -gt $now}
+$sorted = $upcomingEvents | Sort-Object -Property ParsedDateTime
+
+$i = 0
+while ($i -lt 3 -and $i -lt $sorted.Length){
+  $e = $sorted[$i]
+  $line = "- {0} - {1}" -f `
+  $e.Name,
+  $e.ParsedDateTime.ToString("ddd MMM d h:mm tt")
+
+  if ($e.Type) {
+    $line += " [$($e.Type)]"
+  }
+  if ($e.Notes) {
+    $line += " - $($e.Notes)"
+  }
+  Write-Host $line
+  $i++
+}
 
 Write-Host "-----------------------------------"
