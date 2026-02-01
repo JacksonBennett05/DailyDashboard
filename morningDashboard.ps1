@@ -3,13 +3,15 @@ $time = Get-Date -Format "dddd, MMM dd yyyy"
 $lat = $env:LAT ?? 38.9896
 $lng = $env:LNG ?? -76.9371
 $areaCode = $env:CODE ?? 20740
-$fmt = "?format=%C%20%t"
+$fmt = "?u&format=%C%20%t"
 $name = "Jackson"
-$weather = Invoke-WebRequest "https://wttr.in/$areaCode$fmt"
+$uri = "https://wttr.in/$areaCode,US$fmt"
+$weather = Invoke-WebRequest -Uri $uri -HttpVersion 1.1
 $response = Invoke-RestMethod "https://api.sunrise-sunset.org/json?lat=$lat&lng=$lng&tzid=America/New_York"
 $sunrise = $response.results.sunrise
 $sunset  = $response.results.sunset
-$eventData = Import-Csv -Path ".\events.csv"
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$eventData = Import-Csv -Path (Join-Path $scriptDir "events.csv")
 
 
 
