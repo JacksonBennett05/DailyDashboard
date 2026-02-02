@@ -1,36 +1,45 @@
 # DailyDashboard
 
+## Overview
+DailyDashboard is a PowerShell-based personal dashboard that provides a quick daily briefing directly in your terminal.
+When run, it displays the current date, local weather and temperature, sunrise and sunset times, recent and upcoming games for your favorite sports teams, and the nearest upcoming events from your to-do list.
+
+The script is designed to be lightweight, customizable, and automation-friendly so it can run manually or as part of a daily routine.
+
+---
+
 ## Functionality
-Running this Powershell script will by default give you the Date the temperature in College Park MD (Can be changed to your location) along with sunrise and sunset. It can also tell you last and next game of your favorite sports teams along with which events are closest to being due on your to do file.
+Running this PowerShell script will by default display:
+- The current date
+- The temperature in College Park, MD (can be changed to any location)
+- Sunrise and sunset times
+- Sunrise and sunset times
+- The most recent and next game for selected sports teams
+- The next three upcoming events from your events.csv file
+
+---
 
 ## Configuration & Customization
-
-This script is designed to be easily personalized.
-Below are the main places you’ll want to edit to make the dashboard your own.
+This script is designed to be easily personalized. Below are the main places you will want to edit to make the dashboard your own.
 
 ---
 
 ### 1. Your Name (Greeting)
-
-At the top of the script, update the `$name` variable:
+At the top of the script, update the $name variable:
 
 ```powershell
 $name = "Jackson"
 ```
 
-Change this to your name.
-It’s used in the “Good Morning” greeting.
+Change this to your name. It is used in the greeting displayed when the dashboard runs.
 
 ---
 
-### 2. Location (Weather & Sunrise/Sunset)
-
-By default, the script uses College Park, MD.
-You can change this in two ways.
+### 2. Location (Weather & Sunrise and Sunset)
+By default, the script uses College Park, MD. You can change this in two ways.
 
 #### Option A: Edit the defaults in the script
-
-Modify these values near the top:
+Modify these values near the top of the script:
 
 ```powershell
 $lat = $env:LAT ?? 38.9896
@@ -38,12 +47,11 @@ $lng = $env:LNG ?? -76.9371
 $areaCode = $env:CODE ?? 20740
 ```
 
-- `lat` / `lng` → latitude & longitude of your city
-- `areaCode` → ZIP code used for weather
+- lat and lng represent the latitude and longitude of your city
+- areaCode is the ZIP code used for weather lookups
 
 #### Option B: Use environment variables (recommended)
-
-You can override the defaults without editing the script:
+You can override the defaults without editing the script itself:
 
 ```powershell
 $env:LAT=40.7128
@@ -54,11 +62,9 @@ $env:CODE=10001
 ---
 
 ### 3. Favorite Sports Teams
-
-Teams are configured using the `Get-ESPNTeamPrevNext` function.
+Sports teams are configured using the Get-ESPNTeamPrevNext function.
 
 #### Example: Arsenal (Premier League)
-
 ```powershell
 $ars = Get-ESPNTeamPrevNext `
   -Sport "soccer" `
@@ -67,7 +73,6 @@ $ars = Get-ESPNTeamPrevNext `
 ```
 
 #### Example: Boston Celtics (NBA)
-
 ```powershell
 $bos = Get-ESPNTeamPrevNext `
   -Sport "basketball" `
@@ -75,55 +80,59 @@ $bos = Get-ESPNTeamPrevNext `
   -TeamKey "BOS"
 ```
 
-To change teams:
-
-- `Sport` → "soccer", "basketball", "football", etc.
-- `League` → ESPN league code (e.g. nba, nfl, eng.1)
-- `TeamKey` → team name, short name, or abbreviation
-
 You can duplicate these blocks to track additional teams.
 
 ---
 
-### 4. Events & To-Do Items
-
-Events are loaded from the `events.csv` file:
+### 4. Events and To-Do Items
+Events are loaded from the events.csv file:
 
 ```powershell
 $eventData = Import-Csv -Path ".\events.csv"
 ```
 
-#### CSV Format
+---
 
-Your `events.csv` should look like this:
+## Automation
 
-```csv
-Name,DateTime,Type,Notes
-Homework 3,2026-02-01 23:59,School,Canvas submission
-Doctor Appointment,2026-02-02 10:30,Personal,Bring insurance card
-```
+### Basic Daily Automation (Optional)
+DailyDashboard can be run automatically once per day using OS-level automation tools.
 
-Important formatting rules:
+On macOS, this is typically done using **Shortcuts**:
+- Create a Shortcut that runs `pwsh DailyDashboard.ps1`
+- Set it to run daily at a time of your choice
+- Add a notification action so you are alerted when the dashboard runs
+- Optionally link the notification to a follow-up Shortcut that displays or opens the output
 
-- `DateTime` must be in `yyyy-MM-dd HH:mm` format
-- `Type` is optional
-- `Notes` is optional
-- Only upcoming events are shown
-- The script displays the next 3 upcoming events
+This provides a daily briefing without needing to manually run the script.
+
+On Windows, similar behavior can be achieved using **Task Scheduler** with an optional notification step.
 
 ---
 
-### 5. Running Automatically (Optional)
+### If You Do Not Want Automation or Notifications
+Automation is completely optional. If you prefer to run the script manually:
 
-You can configure this script to run on startup.
+You can safely:
+- Delete or ignore any Shortcut or scheduled task you created
+- Remove any notification-related steps from your automation
+- Run the script directly in the terminal using:
 
-- Windows: Use Task Scheduler to run the PowerShell script on login
-- macOS/Linux (PowerShell Core): Add to shell startup or use a scheduled task
+```powershell
+pwsh ./DailyDashboard.ps1
+```
 
-This turns the dashboard into a daily morning briefing.
+No code changes are required for manual use. The dashboard will function normally without automation or notifications.
 
+---
 
-<!-- Gives daily update with sports scores, weather and even starts up some music!  
-  
-This script is designed to automate your morning routine running automatically when you start up your computer to deliver all your essential info in one place. It can be customized to include different data sources, notifications, or launch specific apps to make your day easier
--->
+## Notes
+- The script works with or without automation
+- No background scheduler is required by default
+- Environment variables are optional but recommended
+- The script is designed to fail gracefully if optional data is missing
+
+---
+
+## License
+Personal project. Free to modify and adapt for personal use.
