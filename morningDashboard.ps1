@@ -13,7 +13,7 @@ $sunset  = $response.results.sunset
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $eventData = Import-Csv -Path (Join-Path $scriptDir "events.csv")
 
-# --- Logging: overwrite the log each run so out.log is "today only" ---
+# --- Logging: overwrite the log each run so out.log is "today only" (Delete if you dont want Automation) ---
 $homeDir = $env:DD_HOME ?? $HOME
 $logDir  = Join-Path $homeDir "Library/Logs/DailyDashboard"
 $outLog  = Join-Path $logDir "out.log"
@@ -22,7 +22,7 @@ New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 # Clear previous run logs
 "" | Set-Content -Path $outLog
 "" | Set-Content -Path $errLog
-
+# --- End of Automation ---
 
 Write-Host " "
 Write-Host "Run started at: $(Get-Date -Format 'yyyy-MM-dd h:mm:ss tt')"
@@ -177,7 +177,7 @@ while ($i -lt 3 -and $i -lt $sorted.Length){
 
 Write-Host "-----------------------------------"
 
-# --- Notify when done (reliable macOS notification) ---
+# --- Notify when done (Delete if you dont want a notification when it runs) ---
 $doneTime = Get-Date -Format "h:mm:ss tt"
 & /opt/homebrew/bin/terminal-notifier `
   -title "Morning Dashboard" `
