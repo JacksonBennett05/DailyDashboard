@@ -13,8 +13,19 @@ $sunset  = $response.results.sunset
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $eventData = Import-Csv -Path (Join-Path $scriptDir "events.csv")
 
+# --- Logging: overwrite the log each run so out.log is "today only" ---
+$homeDir = $env:DD_HOME ?? $HOME
+$logDir  = Join-Path $homeDir "Library/Logs/DailyDashboard"
+$outLog  = Join-Path $logDir "out.log"
+$errLog  = Join-Path $logDir "err.log"
+New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+# Clear previous run logs
+"" | Set-Content -Path $outLog
+"" | Set-Content -Path $errLog
 
 
+Write-Host " "
+Write-Host "Run started at: $(Get-Date -Format 'yyyy-MM-dd h:mm:ss tt')"
 Write-Host " "
 Write-Host "========== Good Morning $name =========="
 Write-Host "Todays Date is: $time"
@@ -165,3 +176,10 @@ while ($i -lt 3 -and $i -lt $sorted.Length){
 }
 
 Write-Host "-----------------------------------"
+
+# --- Notify when done (reliable macOS notification) ---
+$doneTime = Get-Date -Format "h:mm:ss tt"
+& /opt/homebrew/bin/terminal-notifier `
+  -title "Morning Dashboard" `
+  -message "Dashboard ready ($doneTime)" `
+  -sound default
